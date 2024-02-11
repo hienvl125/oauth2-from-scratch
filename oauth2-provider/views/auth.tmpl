@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oauth2 Provider</title>
+</head>
+<body>
+  {{ if .Error }}
+    <h2 style="color:red;">{{ .Error }}</h2>
+  {{ end }}
+  {{ if .IsValidConfiguration }}
+    <h1>{{ .ClientName }} would like to:</h1>
+    <ul>
+      {{ range .OAuth2ClientScopes }}
+        <li>{{ .Description }}</li>
+      {{ end }}
+    </ul>
+    <form action="/oauth2/auth" method="post">
+      <div>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" value="{{ .Email }}">
+      </div>
+      
+      <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password">
+      </div>
+
+      <input type="hidden" name="client_id" value="{{ .ClientID }}">
+      <input type="hidden" name="state" value="{{ .State }}">
+      <input type="hidden" name="redirect_uri" value="{{ .RedirectURI }}">
+      <input type="hidden" name="response_type" value="{{ .ResponseType }}">
+      <input type="hidden" name="scope" value="{{ .Scope }}">
+
+      <button type="submit">Login</button>
+    </form>
+  {{ else }}
+    <h1 style="color:red;">Invalid OAuth2 Client Configuration</h1>
+  {{ end }}
+</body>
+</html>
